@@ -1,5 +1,7 @@
 package lexer
 
+//END OF PAGE 19
+
 import (
 	"testing"
 
@@ -81,13 +83,28 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
+		} else if isDigit(l.ch) {
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
+			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}
 	}
-
 	l.readChar()
 	return tok
+}
+
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
+}
+
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
 }
 
 func TestNextToken(t *testing.T) {
@@ -119,7 +136,7 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "add"},
 		{token.ASSIGN, "="},
 		{token.FUNCTION, "fn"},
-		{token.RPAREN, "("},
+		{token.LPAREN, "("},
 		{token.IDENT, "x"},
 		{token.COMMA, ","},
 		{token.IDENT, "y"},
@@ -135,12 +152,12 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "result"},
 		{token.ASSIGN, "="},
 		{token.IDENT, "add"},
-		{token.RPAREN, "("},
+		{token.LPAREN, "("},
 		{token.IDENT, "five"},
 		{token.COMMA, ","},
 		{token.IDENT, "ten"},
 		{token.RPAREN, ")"},
-		{token.SEMICOLON, ""},
+		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
 
