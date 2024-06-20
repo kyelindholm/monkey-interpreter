@@ -1,7 +1,5 @@
 package lexer
 
-//END OF PAGE 19
-
 import "monkey-interpreter/token"
 
 type Lexer struct {
